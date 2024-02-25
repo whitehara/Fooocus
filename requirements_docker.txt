@@ -1,7 +1,7 @@
 torch==2.2.0
-torchvision==0.17.0
+torchvision==0.15.2
 torchaudio==2.2.0
-torchtext==0.17.0
+torchtext==0.15.2
 torchdata==0.7.1
 xformers==0.0.24
 triton==2.2.0
