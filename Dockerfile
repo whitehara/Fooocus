@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.3.1-base-ubuntu22.04
+FROM nvidia/cuda:12.3.2-base-ubuntu22.04
 ENV DEBIAN_FRONTEND noninteractive
 ENV CMDARGS --listen
 
