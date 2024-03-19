@@ -210,9 +210,8 @@ def parse_meta_from_preset(preset_content):
                 height = height[:height.index(" ")]
             preset_prepared[meta_key] = (width, height)
         else:
-            preset_prepared[meta_key] = items[settings_key] if settings_key in items and items[
-                settings_key] is not None else getattr(modules.config, settings_key)
-
+            preset_prepared[meta_key] = items[settings_key] if settings_key in items and items[settings_key] is not None else getattr(modules.config, settings_key)
+        
         if settings_key == "default_styles" or settings_key == "default_aspect_ratio":
             preset_prepared[meta_key] = str(preset_prepared[meta_key])
 
@@ -377,7 +376,7 @@ class A1111MetadataParser(MetadataParser):
                         data[key] = filename
                         break
 
-        if 'lora_hashes' in data:
+        if 'lora_hashes' in data and data['lora_hashes'] != '':
             lora_filenames = modules.config.lora_filenames.copy()
             if modules.config.sdxl_lcm_lora in lora_filenames:
                 lora_filenames.remove(modules.config.sdxl_lcm_lora)
@@ -431,16 +430,15 @@ class A1111MetadataParser(MetadataParser):
             if key in data:
                 generation_params[self.fooocus_to_a1111[key]] = data[key]
 
-        lora_hashes = []
-        for index, (lora_name, lora_weight, lora_hash) in enumerate(self.loras):
-            # workaround for Fooocus not knowing LoRA name in LoRA metadata
-            lora_hashes.append(f'{lora_name}: {lora_hash}: {lora_weight}')
-        lora_hashes_string = ', '.join(lora_hashes)
+        if len(self.loras) > 0:
+            lora_hashes = []
+            for index, (lora_name, lora_weight, lora_hash) in enumerate(self.loras):
+                # workaround for Fooocus not knowing LoRA name in LoRA metadata
+                lora_hashes.append(f'{lora_name}: {lora_hash}: {lora_weight}')
+            lora_hashes_string = ', '.join(lora_hashes)
+            generation_params[self.fooocus_to_a1111['lora_hashes']] = lora_hashes_string
 
-        generation_params |= {
-            self.fooocus_to_a1111['lora_hashes']: lora_hashes_string,
-            self.fooocus_to_a1111['version']: data['version']
-        }
+        generation_params[self.fooocus_to_a1111['version']] = data['version']
 
         if modules.config.metadata_created_by != '':
             generation_params[self.fooocus_to_a1111['created_by']] = modules.config.metadata_created_by
