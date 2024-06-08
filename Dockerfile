@@ -23,7 +23,7 @@ RUN chown -R user:user /content
 WORKDIR /content
 USER user
 
-COPY --chown=user . /content/app
+COPY --chown=user:user --chown=user . /content/app
 RUN mv /content/app/models /content/app/models.org
 
 CMD [ "sh", "-c", "/content/entrypoint.sh ${CMDARGS}" ]
